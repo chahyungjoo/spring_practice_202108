@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.practice.login.service.LoginService;
-import com.practice.member.service.MemberService;
+import com.practice.user.service.UserService;
 
 
 @Controller
@@ -18,7 +18,7 @@ import com.practice.member.service.MemberService;
 public class LoginController {
 	
 	@Autowired
-	private MemberService memberService;
+	private UserService userService;
 	
 	@Autowired
 	private LoginService loginService;
@@ -29,7 +29,7 @@ public class LoginController {
 	@GetMapping("/login")
 	public String getLoginPage(Model model) {
 		
-		return "home";
+		return "loginForm";
 	}
 	
 	@PostMapping("/login")
