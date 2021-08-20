@@ -35,7 +35,7 @@ public class DatabaseConfig {
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
-        sqlSessionFactoryBean.setTypeAliasesPackage("com.practice.*.vo");
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.practice.vo");
         sqlSessionFactoryBean.setMapperLocations(appCtx.getResources("classpath*:/mapper/*.xml"));
         return sqlSessionFactoryBean.getObject();
     }

@@ -1,4 +1,4 @@
-package com.practice.login.service;
+package com.practice.service;
 
 public interface LoginService {
 

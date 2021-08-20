@@ -72,6 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/login/loginForm").permitAll()
+                .antMatchers("/user/joinForm").permitAll()
                 .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/authenticate").permitAll()	// 토큰을 받기위한 login api
                 .antMatchers("/api/signup").permitAll()	// 회원가입을 위한 api

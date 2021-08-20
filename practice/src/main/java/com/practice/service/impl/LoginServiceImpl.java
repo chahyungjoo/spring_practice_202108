@@ -1,8 +1,8 @@
-package com.practice.login.service.impl;
+package com.practice.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.practice.login.service.LoginService;
+import com.practice.service.LoginService;
 
 @Service
 public class LoginServiceImpl implements LoginService {

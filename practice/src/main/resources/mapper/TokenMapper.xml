@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+			
+<mapper namespace="com.practice.mapper.TokenMapper">
+
+	<resultMap id="tokenResult" type="TokenVo">
+		<!-- <result 		property="userSeq" 				column="USER_SEQ"/> -->
+		<result 		property="refreshToken" 		column="REFRESH_TOKEN"/>
+		<result 		property="userId" 				column="USER_ID"/>
+		<collection 	property="user" 				column="ID" 		ofType="com.practice.user.vo.UserVO" 	select="com.practice.user.mapper.UserMapper.selectUserById"/>
+	</resultMap>
+
+	<select id="selectRefreshToken" resultMap="tokenResult">
+		SELECT 
+			  USER.ID
+			, USER.USER_ID
+			, REFRESH_TOKEN 
+		FROM 
+			REFRESH_TOKENS 
+			LEFT OUTER JOIN USER 
+				ON REFRESH_TOKENS.USER_ID = USER.USER_ID
+		WHERE ID = #{id}
+		LIMIT 1
+	</select>
+
+	<insert id="updateRefreshToken" parameterType="com.practice.vo.TokenVo">
+		INSERT INTO REFRESH_TOKENS 
+		(
+			  USER_ID
+			, REFRESH_TOKEN
+		) 
+		VALUES 
+		(
+			  #{userId}
+			, #{refreshToken}
+		)
+			ON DUPLICATE KEY UPDATE
+			REFRESH_TOKEN = #{refreshToken}
+	</insert>
+</mapper>

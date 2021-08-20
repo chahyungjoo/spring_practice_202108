@@ -1,12 +1,8 @@
-package com.practice.user.service;
+package com.practice.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
-import com.practice.member.vo.MemberVo;
-import com.practice.user.vo.UserVo;
+import com.practice.vo.UserVo;
 
 public interface UserService {
 	

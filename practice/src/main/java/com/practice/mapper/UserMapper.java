@@ -1,12 +1,11 @@
-package com.practice.user.mapper;
+package com.practice.mapper;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import com.practice.member.vo.MemberVo;
-import com.practice.user.vo.UserVo;
+import com.practice.vo.UserVo;
 
 @Mapper
 @Repository

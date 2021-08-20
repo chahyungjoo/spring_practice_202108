@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.practice.mapper.UserMapper">
+	
+	<insert id="insertUser" parameterType="UserVo">
+		INSERT INTO USER
+		(
+			  USER_SEQ
+			, USER_ID
+			, PASSWORD
+			, NAME
+			, EMAIL
+			, PHONE
+			, CRE_DT
+			, UPD_DT
+		)
+		VALUES
+		(
+			  (SELECT IFNULL(MAX(user_seq)+1, 1) FROM USER U)
+			, #{userId}
+			, #{password}
+			, #{name}
+			, #{email}
+			, #{phone}
+			, NOW()
+			, NOW()
+		)
+	</insert>
+	
+	<select id="selectUserList" parameterType="UserVo" resultType="UserVo">
+		SELECT
+			  USER_SEQ
+			, USER_ID
+			, NAME
+			, EMAIL
+			, PHONE
+			, CRE_DT
+			, UPD_DT
+		FROM USER
+	</select>
+	
+	<select id="selectUserById" parameterType="Long" resultType="UserVo">
+		SELECT
+			  USER_SEQ
+			, USER_ID
+			, NAME
+			, EMAIL
+			, PHONE
+			, CRE_DT
+			, UPD_DT
+		FROM USER
+		WHERE 1=1
+		<if test = ' id != null and id != "" '>
+			AND USER_ID = #{id}
+		</if>
+	</select>
+	
+	
+</mapper>

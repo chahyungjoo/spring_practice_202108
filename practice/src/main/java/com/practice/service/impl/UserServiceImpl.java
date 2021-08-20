@@ -1,17 +1,13 @@
-package com.practice.user.service.impl;
+package com.practice.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.practice.member.mapper.MemberMapper;
-import com.practice.member.service.MemberService;
-import com.practice.member.vo.MemberVo;
-import com.practice.user.mapper.UserMapper;
-import com.practice.user.service.UserService;
-import com.practice.user.vo.UserVo;
+import com.practice.mapper.UserMapper;
+import com.practice.service.UserService;
+import com.practice.vo.UserVo;
 
 @Service
 public class UserServiceImpl implements UserService {

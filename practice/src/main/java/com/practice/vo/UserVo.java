@@ -1,4 +1,4 @@
-package com.practice.user.vo;
+package com.practice.vo;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ import lombok.Data;
 public class UserVo {
 
 	private Long userSeq;
-	private String id;
+	private String userId;
 	private String password;
 	private String name;
 	private String email;
