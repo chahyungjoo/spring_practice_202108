@@ -1,5 +1,8 @@
 package com.practice.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.practice.service.LoginService;
 import com.practice.service.UserService;
+import com.practice.vo.UserVo;
 
 
 @Controller
@@ -34,7 +38,17 @@ public class LoginController {
 	}
 	
 	@PostMapping("/loginForm")
-	public String login(Model model) {
+	public String login(Model model, UserVo user) {
+		
+		/*// user정보 리턴
+		UserVo userVo = userService.selectUserById(user.getUserId());
+		if (userVo == null) {
+			Map<String, Object> res = new HashMap<>();
+			String message = "Id is not found";
+			res.put("message", message);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+		}*/
+		
 		
 		return "redirect:/";
 	}
