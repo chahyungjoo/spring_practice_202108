@@ -61,7 +61,7 @@ public class LoginController {
 		// 비밀번호가 틀렸을 때
 		if (!passwordEncoder.matches(user.getPassword(), userVo.getPassword())) {
             throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
-        } 
+        }
 		
 		
 		return "redirect:/";
