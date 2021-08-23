@@ -40,7 +40,7 @@
 		FROM USER
 	</select>
 	
-	<select id="selectUserById" parameterType="Long" resultType="UserVo">
+	<select id="selectUserById" parameterType="UserVo" resultType="UserVo">
 		SELECT
 			  USER_SEQ
 			, USER_ID
@@ -51,8 +51,8 @@
 			, UPD_DT
 		FROM USER
 		WHERE 1=1
-		<if test = ' id != null and id != "" '>
-			AND USER_ID = #{id}
+		<if test = ' userId != null and userId != "" '>
+			AND USER_ID = #{userId}
 		</if>
 	</select>
 	

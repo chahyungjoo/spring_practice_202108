@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,9 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
 	
@@ -40,14 +44,24 @@ public class LoginController {
 	@PostMapping("/loginForm")
 	public String login(Model model, UserVo user) {
 		
-		/*// user정보 리턴
-		UserVo userVo = userService.selectUserById(user.getUserId());
+		// user정보 리턴
+		UserVo userVo = userService.selectUserById(user);
+		
+		// 해당 ID가 없을 때
 		if (userVo == null) {
 			Map<String, Object> res = new HashMap<>();
 			String message = "Id is not found";
 			res.put("message", message);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-		}*/
+			
+			throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
+			//throw new Exception("아이디 혹은 비밀번호가 잘못되었습니다.");
+			//return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+		}
+		
+		// 비밀번호가 틀렸을 때
+		if (!passwordEncoder.matches(user.getPassword(), userVo.getPassword())) {
+            throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
+        }
 		
 		
 		return "redirect:/";

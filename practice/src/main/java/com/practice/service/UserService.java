@@ -8,7 +8,7 @@ public interface UserService {
 	
 	public void insertUser(UserVo userVo);
 	
-	public UserVo selectUserById(Long id);
+	public UserVo selectUserById(UserVo userVo);
 	
 	public List<UserVo> selectUserList(UserVo userVo);
 	
