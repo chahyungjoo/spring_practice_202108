@@ -11,6 +11,7 @@
 			<span>ID : </span><input type="text" name="userId"/>
 			<span>PW : </span><input type="text" name="password"/>
 			<button type="submit" >LOGIN</button>
+			<span th:if="${errorMessage != null and errorMessage != ''}" th:text="${errorMessage}"></span>
 		</form>
 	</div>
 </body>

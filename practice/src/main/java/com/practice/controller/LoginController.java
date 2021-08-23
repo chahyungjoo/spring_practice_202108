@@ -47,22 +47,21 @@ public class LoginController {
 		// user정보 리턴
 		UserVo userVo = userService.selectUserById(user.getUserId());
 		
-		// 해당 ID가 없을 때
-		if (userVo == null) {
-			Map<String, Object> res = new HashMap<>();
-			String message = "Id is not found";
-			res.put("message", message);
+		// 해당 ID가 없을 때 or 비밀번호가 틀렸을 때
+		if (userVo == null || !passwordEncoder.matches(user.getPassword(), userVo.getPassword())) {
+			//Map<String, Object> res = new HashMap<>();
+			//String message = "Id is not found";
+			//res.put("message", message);
 			
-			throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
+			//throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
+			
+			String message = "아이디 혹은 비밀번호가 잘못되었습니다.";
+			model.addAttribute("errorMessage", message);
+			
+			return "login/loginForm";
 			//throw new Exception("아이디 혹은 비밀번호가 잘못되었습니다.");
 			//return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
 		}
-		
-		// 비밀번호가 틀렸을 때
-		if (!passwordEncoder.matches(user.getPassword(), userVo.getPassword())) {
-            throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
-        }
-		
 		
 		return "redirect:/";
 	}
