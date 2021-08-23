@@ -37,6 +37,7 @@ public class DatabaseConfig {
         sqlSessionFactoryBean.setDataSource(dataSource);
         sqlSessionFactoryBean.setTypeAliasesPackage("com.practice.vo");
         sqlSessionFactoryBean.setMapperLocations(appCtx.getResources("classpath*:/mapper/*.xml"));
+        sqlSessionFactoryBean.setConfigLocation(appCtx.getResource("classpath:/mybatis-config.xml"));
         return sqlSessionFactoryBean.getObject();
     }
 

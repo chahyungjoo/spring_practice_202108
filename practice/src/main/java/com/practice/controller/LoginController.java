@@ -45,7 +45,7 @@ public class LoginController {
 	public String login(Model model, UserVo user) {
 		
 		// user정보 리턴
-		UserVo userVo = userService.selectUserById(user);
+		UserVo userVo = userService.selectUserById(user.getUserId());
 		
 		// 해당 ID가 없을 때
 		if (userVo == null) {

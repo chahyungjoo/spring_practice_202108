@@ -15,7 +15,7 @@ public interface UserMapper {
 	
 	public List<UserVo> selectUserList(UserVo userVo);
 	
-	public UserVo selectUserById(UserVo userVo);
+	public UserVo selectUserById(String userId);
 	
 	public Integer updateUser(UserVo userVo);
 	
