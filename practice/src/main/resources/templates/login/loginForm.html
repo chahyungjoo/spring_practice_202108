@@ -3,15 +3,25 @@
 <head>
  <title>Login</title>
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <script type="text/javascript" src="/js/jquery/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+	<script>
+		$(document).ready(function() {
+			alert('aa');
+		});
+	</script>
+
+
 	<h1>Login Page</h1>
 	<div>
-		<form method="post" action="">
+		<form method="post" action="/login/loginForm">
 			<span>ID : </span><input type="text" name="userId"/>
 			<span>PW : </span><input type="text" name="password"/>
 			<button type="submit" >LOGIN</button>
-			<span th:if="${errorMessage != null and errorMessage != ''}" th:text="${errorMessage}"></span>
+			<div id="resultDiv">
+				<p th:if="${errorMessage}!=null" th:text="${errorMessage}"></p>
+			</div>
 		</form>
 	</div>
 </body>

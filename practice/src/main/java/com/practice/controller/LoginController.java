@@ -58,7 +58,7 @@ public class LoginController {
 			String message = "아이디 혹은 비밀번호가 잘못되었습니다.";
 			model.addAttribute("errorMessage", message);
 			
-			return "login/loginForm";
+			return "login/loginForm :: #resultDiv";
 			//throw new Exception("아이디 혹은 비밀번호가 잘못되었습니다.");
 			//return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
 		}

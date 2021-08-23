@@ -4,6 +4,8 @@ import com.practice.jwt.JwtAccessDeniedHandler;
 import com.practice.jwt.JwtAuthenticationEntryPoint;
 import com.practice.jwt.JwtSecurityConfig;
 import com.practice.jwt.TokenProvider;
+
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	// @EnableGlobalMethodSecurity : @PreAuthorize 검증 어노테이션을 메소드 단위로 사용하기 위해 추가
@@ -43,16 +45,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
  
     @Override
     public void configure(WebSecurity web) {
-        web
-                .ignoring()
-                .antMatchers(
-                        "/h2-console/**"
-                        , "/favicon.ico"
-                );
+    	web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    	//web.ignoring().antMatchers("/css/**", "/js/**", "/img/**");
+    	//web.ignoring().antMatchers("/**");
     }
  
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()	// 토큰방식을 사용하므로 csrf는 disable
  
@@ -61,10 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 
                 // H2-console을 위한 설정
-                .and()
-                .headers()
-                .frameOptions()
-                .sameOrigin()
+                //.and()
+                //.headers()
+                //.frameOptions()
+                //.sameOrigin()
                 
                 // session을 사용하지 않을때 설정을 STATELESS로 함
                 .and()
@@ -74,11 +73,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/images/**").permitAll()
+                //.antMatchers("/assets/**").permitAll()
                 .antMatchers("/login/loginForm").permitAll()
                 .antMatchers("/user/joinForm").permitAll()
-                .antMatchers("/api/hello").permitAll()
-                .antMatchers("/api/authenticate").permitAll()	// 토큰을 받기위한 login api
-                .antMatchers("/api/signup").permitAll()	// 회원가입을 위한 api
+                //.antMatchers("/api/hello").permitAll()
+                //.antMatchers("/api/authenticate").permitAll()	// 토큰을 받기위한 login api
+                //.antMatchers("/api/signup").permitAll()	// 회원가입을 위한 api
                 .anyRequest().authenticated()
  
                 .and()
