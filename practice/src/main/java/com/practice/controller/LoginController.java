@@ -3,9 +3,18 @@ package com.practice.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.practice.jwt.TokenProvider;
 import com.practice.service.LoginService;
 import com.practice.service.UserService;
 import com.practice.vo.UserVo;
@@ -22,6 +32,17 @@ import com.practice.vo.UserVo;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
+	
+	//@Autowired
+	//private AuthenticationManager authenticationManager;
+	
+	private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+ 
+    public LoginController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+        this.tokenProvider = tokenProvider;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+    }
 	
 	@Autowired
 	private UserService userService;
@@ -42,28 +63,39 @@ public class LoginController {
 	}
 	
 	@PostMapping("/loginForm")
-	public String login(Model model, UserVo user) {
+	public void login(HttpServletResponse response, Model model, UserVo user) throws Exception {
 		
 		// user정보 리턴
 		UserVo userVo = userService.selectUserById(user.getUserId());
 		
 		// 해당 ID가 없을 때 or 비밀번호가 틀렸을 때
 		if (userVo == null || !passwordEncoder.matches(user.getPassword(), userVo.getPassword())) {
-			//Map<String, Object> res = new HashMap<>();
-			//String message = "Id is not found";
-			//res.put("message", message);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		} else {
+			response.setStatus(HttpServletResponse.SC_OK);
 			
-			//throw new IllegalArgumentException("아이디 혹은 비밀번호가 잘못되었습니다.");
+			/*try {
+				// 비밀번호 인증
+				Authentication authentication = authenticationManager
+						.authenticate(new UsernamePasswordAuthenticationToken(
+								user.getUsername(), user.getPassword(), userVo.getAuthorities()));
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+	        } catch (DisabledException e) {
+	        	logger.error("USER_DISABLED" + e.getMessage());
+				throw new Exception("USER_DISABLED", e);
+			} catch (BadCredentialsException e) {
+				throw new Exception("INVALID_CREDENTIALS", e);
+			}*/
 			
-			String message = "아이디 혹은 비밀번호가 잘못되었습니다.";
-			model.addAttribute("errorMessage", message);
-			
-			return "login/loginForm :: #resultDiv";
-			//throw new Exception("아이디 혹은 비밀번호가 잘못되었습니다.");
-			//return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+			UsernamePasswordAuthenticationToken authenticationToken =
+	                new UsernamePasswordAuthenticationToken(user.getUserId(), user.getPassword());
+	 
+	        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+	        SecurityContextHolder.getContext().setAuthentication(authentication);
+	 
+	        String jwt = tokenProvider.createToken(authentication);
 		}
 		
-		return "redirect:/";
 	}
 	
 	/*@PostMapping("/login")

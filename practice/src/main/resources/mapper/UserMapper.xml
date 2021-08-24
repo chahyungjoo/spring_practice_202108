@@ -3,6 +3,11 @@
 
 <mapper namespace="com.practice.mapper.UserMapper">
 	
+	<resultMap id="userResult" type="UserVo">
+		<result property="userSeq" column="USER_SEQ"/>
+		<collection property="role" column="USER_SEQ" javaType="java.util.ArrayList" ofType="String" select="com.practice.mapper.RoleMapper.selectRolesByUserUserSeq"/>
+	</resultMap>
+	
 	<insert id="insertUser" parameterType="UserVo">
 		INSERT INTO USER
 		(
@@ -41,7 +46,7 @@
 		FROM USER
 	</select>
 	
-	<select id="selectUserById" parameterType="String" resultType="UserVo">
+	<select id="selectUserById" parameterType="String" resultMap="userResult">
 		SELECT
 			  USER_SEQ
 			, USER_ID

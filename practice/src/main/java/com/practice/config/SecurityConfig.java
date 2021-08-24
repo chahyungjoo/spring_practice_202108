@@ -45,9 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
  
     @Override
     public void configure(WebSecurity web) {
+    	// 정적 resouces 경로는 security 적용 안함 (/resources/static/**)
     	web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     	//web.ignoring().antMatchers("/css/**", "/js/**", "/img/**");
-    	//web.ignoring().antMatchers("/**");
     }
  
     @Override
@@ -73,10 +73,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                
+                // 정적 resouces 경로는 security 적용 안함 (/resources/static/**)
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/images/**").permitAll()
-                //.antMatchers("/assets/**").permitAll()
+                
                 .antMatchers("/login/loginForm").permitAll()
                 .antMatchers("/user/joinForm").permitAll()
                 //.antMatchers("/api/hello").permitAll()

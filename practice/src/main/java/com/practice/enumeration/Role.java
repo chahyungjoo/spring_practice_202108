@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Role {
 	
-	SUPERADMIN("ROLE_ADMIN"),
+	SUPERADMIN("ROLE_SUPER_ADMIN"),
 	ADMIN("ROLE_ADMIN"),
-	MEMBER("ROLE_MEMBER");
+	USER("ROLE_USER");
 	
 	private final String role;
 	Role(String role) {
