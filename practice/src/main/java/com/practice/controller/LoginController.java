@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.practice.jwt.JwtFilter;
 import com.practice.jwt.TokenProvider;
 import com.practice.service.LoginService;
 import com.practice.service.UserService;
@@ -33,16 +37,19 @@ import com.practice.vo.UserVo;
 @RequestMapping("/login")
 public class LoginController {
 	
-	//@Autowired
-	//private AuthenticationManager authenticationManager;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
-	private final TokenProvider tokenProvider;
+	@Autowired
+	private TokenProvider tokenProvider;
+	
+	/*private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
  
     public LoginController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
-    }
+    }*/
 	
 	@Autowired
 	private UserService userService;
@@ -63,78 +70,63 @@ public class LoginController {
 	}
 	
 	@PostMapping("/loginForm")
-	public void login(HttpServletResponse response, Model model, UserVo user) throws Exception {
+	public ResponseEntity<?> login(Model model, UserVo user) throws Exception {
 		
 		// user정보 리턴
 		UserVo userVo = userService.selectUserById(user.getUserId());
 		
 		// 해당 ID가 없을 때 or 비밀번호가 틀렸을 때
 		if (userVo == null || !passwordEncoder.matches(user.getPassword(), userVo.getPassword())) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} else {
-			response.setStatus(HttpServletResponse.SC_OK);
+			// response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			//return ResponseEntity.ok(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			
-			/*try {
+			Map<String, Object> res = new HashMap<>();
+			String message = "아이디 혹은 비밀번호가 잘못되었습니다.";
+			res.put("message", message);
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+			
+		} else {
+			// response.setStatus(HttpServletResponse.SC_OK);
+			
+			try {
 				// 비밀번호 인증
 				Authentication authentication = authenticationManager
 						.authenticate(new UsernamePasswordAuthenticationToken(
-								user.getUsername(), user.getPassword(), userVo.getAuthorities()));
+								user.getUserId(), user.getPassword(), userVo.getAuthorities()));
+				
 				SecurityContextHolder.getContext().setAuthentication(authentication);
+				
+				String accessToken = tokenProvider.createToken(authentication);
+				
+				Map<String, Object> res = new HashMap<>();
+				res.put("token", accessToken);
+				res.put("user", userVo);
+				
+				HttpHeaders httpHeaders = new HttpHeaders();
+		        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + accessToken);
+				
+				// return ResponseEntity.ok(res);
+		        
+		        return new ResponseEntity<>(res, httpHeaders, HttpStatus.OK);
+				
 	        } catch (DisabledException e) {
 	        	logger.error("USER_DISABLED" + e.getMessage());
 				throw new Exception("USER_DISABLED", e);
 			} catch (BadCredentialsException e) {
 				throw new Exception("INVALID_CREDENTIALS", e);
-			}*/
+			}
 			
-			UsernamePasswordAuthenticationToken authenticationToken =
-	                new UsernamePasswordAuthenticationToken(user.getUserId(), user.getPassword());
+			/*UsernamePasswordAuthenticationToken authenticationToken =
+	                new UsernamePasswordAuthenticationToken(user.getUserId(), user.getPassword(), userVo.getAuthorities());
 	 
 	        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
 	 
-	        String jwt = tokenProvider.createToken(authentication);
+	        String jwt = tokenProvider.createToken(authentication);*/
 		}
 		
 	}
-	
-	/*@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody UserVO user) throws Exception {
-		// user정보 리턴
-		UserVO userVo = userService.getUserById(user.getUsername());
-		if (userVo == null) {
-			Map<String, Object> res = new HashMap<>();
-			String message = "Id is not found";
-			res.put("message", message);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-		}
-		try {
-			// 비밀번호 인증
-			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-					user.getUsername(), user.getPassword(), userVo.getAuthorities()));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (DisabledException e) {
-        	logger.error("USER_DISABLED" + e.getMessage());
-			throw new Exception("USER_DISABLED", e);
-		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
-		}
-		
-		// token 생성
-		String accessToken = jwtUtil.generateToken(userVo);
-		String refreshToken = jwtUtil.generateRefreshToken(userVo);
-		
-		// refreshToken 저장
-		TokenVO _refreshToken = new TokenVO();
-		_refreshToken.setRefreshToken(refreshToken);
-		_refreshToken.setUserId(userVo.getUserId());
-		authService.updateRefreshToken(_refreshToken);
-
-		Map<String, Object> res = new HashMap<>();
-		res.put("token", accessToken);
-		res.put("user", userVo);
-		return ResponseEntity.ok(res);
-	}*/
 	
 	@PostMapping("/logout")
 	public String logout(Model model) {

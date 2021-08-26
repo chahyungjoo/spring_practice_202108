@@ -17,6 +17,8 @@ public interface UserMapper {
 	
 	public UserVo selectUserById(String userId);
 	
+	public UserVo selectUserByIdIncludePassword(String userId);
+	
 	public Integer updateUser(UserVo userVo);
 	
 	public Integer deleteMember(Long id);

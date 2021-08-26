@@ -7,7 +7,7 @@
 		SELECT * FROM ROLE
 	</select>
 
-	<select id="selectRolesByUserUserSeq" resultType="Long">
+	<select id="selectRolesByUserUserSeq" resultType="String">
 		SELECT
 			DISTINCT ROLE_CODE
 		FROM 

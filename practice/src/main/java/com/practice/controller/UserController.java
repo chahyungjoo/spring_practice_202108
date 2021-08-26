@@ -1,5 +1,6 @@
 package com.practice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -38,11 +39,15 @@ public class UserController {
 	@PostMapping("/joinForm")
 	public String insertUser(UserVo userVo) {
 		
-		//userrVo.setUserId("aa");
-		//userrVo.setEmail("aaa@gmial.com");
+		// 권한 설정
+		List<String> role = new ArrayList<String>();
+		role.add("ROLE_USER");
+		userVo.setRole(role);
 		
 		// password encoding
 		userVo.setPassword(passwordEncoder.encode(userVo.getPassword()));
+		
+		
 		
 		userService.insertUser(userVo);
 		
